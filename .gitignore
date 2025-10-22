@@ -1,0 +1,44 @@
+## Compiled / build artifacts
+bin/
+obj/
+**/bin/
+**/obj/
+/packages/
+
+## Visual Studio / VSCode / Rider
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.cache
+*.ide
+*.userprefs
+
+## Logs & temp
+*.log
+logs/
+*.tmp
+
+## Certificates / keys
+*.pfx
+*.snk
+
+## Local-only appsettings
+appsettings.Local.json
+appsettings.*.local.json
+
+## Publish profiles (user-specific)
+**/Properties/PublishProfiles/*.pubxml.user
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Node (if monorepo later)
+node_modules/
+
+## Coverage
+coverage/
+*.coverage
+*.coveragexml
