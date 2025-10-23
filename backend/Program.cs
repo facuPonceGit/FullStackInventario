@@ -19,7 +19,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DB Provider (MySQL por appsettings)
+// DB Provider (MySQL por appsettings) aqui estamos inyectando la db que usaremos (ya que se uso una abstraccion para cambiar de proveedor de db sin afectar el modelo de datos)
 builder.Services.AddScoped<IDatabaseProvider, MySqlProvider>();
 
 // Services de dominio

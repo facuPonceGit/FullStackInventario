@@ -66,7 +66,7 @@ SELECT LAST_INSERT_ID();";
                 ? dto.ProveedorId
                 : null;
 
-            // Si viene proveedor, validar que exista
+            // Si viene proveedor, se valida que exista
             if (prov.HasValue)
             {
                 var existe = await _db.QuerySingleOrDefaultAsync<int?>(

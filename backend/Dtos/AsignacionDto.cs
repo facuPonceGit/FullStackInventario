@@ -9,7 +9,7 @@ namespace BackendApi.Dtos
         public string UsuarioNombre { get; set; } = "";
         public string? UsuarioEmail { get; set; }
         public DateTime FechaDesde { get; set; }
-        public DateTime? FechaHasta { get; set; } // ← Nullable
+        public DateTime? FechaHasta { get; set; } // 
         public string? Observacion { get; set; }
     }
 }
