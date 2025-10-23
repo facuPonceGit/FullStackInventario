@@ -1,11 +1,16 @@
-## Compiled / build artifacts
-bin/
-obj/
-**/bin/
-**/obj/
-/packages/
+# FullStackInventario3/.gitignore
+# --- Raíz del monorepo (.NET + React/Vite) ---
 
-## Visual Studio / VSCode / Rider
+# SO / archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Logs / temporales
+*.log
+*.tmp
+/coverage/
+
+# IDEs
 .vs/
 .vscode/
 .idea/
@@ -15,30 +20,31 @@ obj/
 *.ide
 *.userprefs
 
-## Logs & temp
-*.log
-logs/
-*.tmp
+# .NET
+**/bin/
+**/obj/
 
-## Certificates / keys
+# Perfiles de publicación (con datos de usuario)
+**/Properties/PublishProfiles/*.pubxml.user
+
+# AppSettings locales (NO secretos en Git)
+**/appsettings.Local.json
+**/appsettings.*.local.json
+
+# Certificados/llaves locales
 *.pfx
 *.snk
 
-## Local-only appsettings
-appsettings.Local.json
-appsettings.*.local.json
-
-## Publish profiles (user-specific)
-**/Properties/PublishProfiles/*.pubxml.user
-
-## OS files
-.DS_Store
-Thumbs.db
-
-## Node (if monorepo later)
+# Node
 node_modules/
 
-## Coverage
-coverage/
-*.coverage
-*.coveragexml
+# Build de Vite
+frontend/dist/
+
+# Archivos .env (mantener solo ejemplos)
+*.env
+*.env.*
+!.env.example
+
+# Paquetes/artefactos (si existieran)
+ /packages/

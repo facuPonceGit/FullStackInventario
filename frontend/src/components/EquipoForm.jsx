@@ -1,4 +1,4 @@
-// src/components/EquipoForm.js
+// frontend/src/components/EquipoForm.js
 
 
 import { useState } from 'react'

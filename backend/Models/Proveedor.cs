@@ -1,4 +1,6 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/Proveedor.cs
+
+namespace BackendApi.Models
 {
     public class Proveedor
     {

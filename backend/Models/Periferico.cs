@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/Periferico.cs
+
+
+namespace BackendApi.Models
 {
     public class Periferico
     {

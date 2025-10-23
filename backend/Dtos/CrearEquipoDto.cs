@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Dtos
+﻿//backend/Dtos/ComprarEquipoDto.cs
+
+
+namespace BackendApi.Dtos
 {
     public class CrearEquipoDto
     {

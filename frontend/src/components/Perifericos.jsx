@@ -1,10 +1,8 @@
-// src/components/Perifericos.js
-
-
+// frontend/src/components/Perifericos.js - AGREGAR onSaved
 import { useEffect, useState } from 'react'
 import { listarPerifericos, agregarPeriferico } from '../api/equipos'
 
-export default function Perifericos({ equipoId }) {
+export default function Perifericos({ equipoId, onSaved }) { // ← Agregar onSaved
     const [list, setList] = useState([])
     const [f, setF] = useState({ tipo: '', marca: '', modelo: '', numeroSerie: '' })
 
@@ -16,6 +14,7 @@ export default function Perifericos({ equipoId }) {
         await agregarPeriferico(equipoId, f)
         setF({ tipo: '', marca: '', modelo: '', numeroSerie: '' })
         load()
+        onSaved?.(); // ← Notificar actualización
     }
 
     return (

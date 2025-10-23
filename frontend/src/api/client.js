@@ -1,4 +1,4 @@
-// src/api/client.js
+// frontend/src/api/client.js
 
 import axios from 'axios'
 

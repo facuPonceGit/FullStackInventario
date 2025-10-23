@@ -1,8 +1,13 @@
 -- 01_schema.sql — Creación de base y tablas (MySQL/MariaDB compatibles)
 -- Ejecutar con un usuario administrador (root) o con privilegios suficientes
 
--- Opcional: versión del servidor
--- SELECT VERSION();
+## 3. Scripts de Base de Datos Actualizados
+
+### `backend/db/01_schema.sql` (estructura final corregida)
+
+```sql
+-- 01_schema.sql — Creación de base y tablas (MySQL/MariaDB compatibles)
+-- Ejecutar con un usuario administrador (root) o con privilegios suficientes
 
 -- 1) Base de datos
 CREATE DATABASE IF NOT EXISTS inventario
@@ -13,9 +18,9 @@ USE inventario;
 -- 2) Catálogos
 CREATE TABLE IF NOT EXISTS proveedores (
   Id INT AUTO_INCREMENT PRIMARY KEY,
-  Nombre   VARCHAR(120) NOT NULL,
+  Nombre VARCHAR(120) NOT NULL,
   Telefono VARCHAR(50),
-  Email    VARCHAR(120)
+  Email VARCHAR(120)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS ubicaciones (
@@ -26,8 +31,8 @@ CREATE TABLE IF NOT EXISTS ubicaciones (
 CREATE TABLE IF NOT EXISTS usuarios_asignados (
   Id INT AUTO_INCREMENT PRIMARY KEY,
   Nombre VARCHAR(120) NOT NULL,
-  Email  VARCHAR(120),
-  Area   VARCHAR(120)
+  Email VARCHAR(120),
+  Area VARCHAR(120)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 3) Equipos (R1 + R3 + R4)
@@ -65,7 +70,7 @@ CREATE TABLE IF NOT EXISTS perifericos (
 CREATE TABLE IF NOT EXISTS historial_cambios (
   Id INT AUTO_INCREMENT PRIMARY KEY,
   EquipoId INT NOT NULL,
-  Fecha DATETIME NOT NULL,
+  Fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Descripcion TEXT NOT NULL,
   Usuario VARCHAR(120),
   CONSTRAINT fk_hist_eq FOREIGN KEY (EquipoId) REFERENCES equipos(Id)
@@ -76,7 +81,7 @@ CREATE TABLE IF NOT EXISTS asignaciones (
   Id INT AUTO_INCREMENT PRIMARY KEY,
   EquipoId INT NOT NULL,
   UsuarioId INT NOT NULL,
-  FechaDesde DATETIME NOT NULL,
+  FechaDesde DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FechaHasta DATETIME NULL,
   Observacion VARCHAR(250),
   CONSTRAINT fk_asig_eq  FOREIGN KEY (EquipoId) REFERENCES equipos(Id),
@@ -87,3 +92,8 @@ CREATE TABLE IF NOT EXISTS asignaciones (
 CREATE INDEX idx_equipos_ubicacion           ON equipos (UbicacionId);
 CREATE INDEX idx_historial_equipo_fecha      ON historial_cambios (EquipoId, Fecha);
 CREATE INDEX idx_asignaciones_equipo_vigente ON asignaciones (EquipoId, FechaHasta);
+
+-- 8) Usuario de aplicación (opcional pero recomendado)
+CREATE USER IF NOT EXISTS 'inventario_app'@'localhost' IDENTIFIED BY '2194';
+GRANT ALL PRIVILEGES ON inventario.* TO 'inventario_app'@'localhost';
+FLUSH PRIVILEGES;

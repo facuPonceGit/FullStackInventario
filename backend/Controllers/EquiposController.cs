@@ -1,4 +1,7 @@
-﻿using BackendApi.Dtos;
+﻿// backend/Controllers/EquipoControllers.cs
+
+
+using BackendApi.Dtos;
 using BackendApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -103,7 +106,8 @@ public class EquiposController : ControllerBase
         if (!await _svc.EquipoExisteAsync(id))
             return NotFound(new { message = "El equipo no existe." });
 
-        return Ok(await _svc.ObtenerAsignacionVigenteAsync(id));
+        var asignacion = await _svc.ObtenerAsignacionVigenteAsync(id);
+        return Ok(asignacion); // puede ser null
     }
 
     // R4 — Historial de asignaciones

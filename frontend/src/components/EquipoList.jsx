@@ -1,4 +1,4 @@
-// src/components/EquipoList.js
+// frontend/src/components/EquipoList.js
 
 
 import { useEffect, useState } from 'react'
