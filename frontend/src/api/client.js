@@ -8,7 +8,7 @@ const api = axios.create({
   withCredentials: false
 })
 
-// Logs de todas las requests/responses para que sean "visibles" (sin scaffold)
+// Logs de todas las requests/responses 
 api.interceptors.request.use((config) => {
   console.log('[API:request]', config.method?.toUpperCase(), config.url, { params: config.params, data: config.data })
   return config

@@ -1,73 +1,103 @@
-// frontend/src/components/Ubicacion.js - VERSIÓN CORREGIDA
-import { useEffect, useState } from 'react'
-import { listarUbicaciones } from '../api/catalogos'
-import { cambiarUbicacion } from '../api/equipos'
+// frontend/src/components/Ubicacion.jsx
+import { useEffect, useState } from 'react';
+import { Card, Form, Button, Row, Col } from 'react-bootstrap';
+import { listarUbicaciones } from '../api/catalogos';
+import { cambiarUbicacion } from '../api/equipos';
 
 export default function Ubicacion({ equipoId, detalle, onSaved }) {
-    const [ubicaciones, setUbicaciones] = useState([])
-    const [sel, setSel] = useState('')
+    const [ubicaciones, setUbicaciones] = useState([]);
+    const [selectedUbicacion, setSelectedUbicacion] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        listarUbicaciones().then(setUbicaciones)
-    }, [])
+        listarUbicaciones().then(setUbicaciones);
+    }, []);
 
     // Actualizar selección cuando cambia el detalle
     useEffect(() => {
         if (detalle) {
-            setSel(detalle.ubicacionId?.toString() || '');
+            setSelectedUbicacion(detalle.ubicacionId?.toString() || '');
         }
-    }, [detalle])
+    }, [detalle]);
 
     const save = async () => {
+        if (!equipoId) return;
+
+        setLoading(true);
         try {
             // Convertir a número o null
-            const ubicacionId = sel ? parseInt(sel) : null;
+            const ubicacionId = selectedUbicacion ? parseInt(selectedUbicacion) : null;
             await cambiarUbicacion(equipoId, ubicacionId);
-            alert("Ubicación guardada correctamente");
             onSaved?.();
         } catch (error) {
             console.error("Error guardando ubicación:", error);
             alert("Error al guardar la ubicación");
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     return (
-        <div style={{ border: "1px solid #ddd", borderRadius: 8, padding: 12 }}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'end' }}>
-                <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: "0 0 8px 0" }}>Ubicación</h4>
-                    <select
-                        value={sel}
-                        onChange={(e) => setSel(e.target.value)}
-                        style={{ width: "100%", padding: "6px" }}
-                    >
-                        <option value="">(sin ubicación)</option>
-                        {ubicaciones.map(u => (
-                            <option key={u.id} value={u.id}>
-                                {u.nombre}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <button
-                    onClick={save}
-                    style={{
-                        padding: "6px 12px",
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
-                        borderRadius: 4,
-                        cursor: "pointer"
-                    }}
-                >
-                    Guardar
-                </button>
-            </div>
-            {detalle?.ubicacionNombre && (
-                <div style={{ marginTop: 8, fontSize: "0.9em", color: "#666" }}>
-                    Actual: <strong>{detalle.ubicacionNombre}</strong>
-                </div>
-            )}
-        </div>
-    )
+        <Card className="h-100">
+            <Card.Header className="bg-white py-3">
+                <h6 className="mb-0 fw-bold">
+                    <i className="fas fa-map-marker-alt me-2"></i>
+                    Ubicación
+                </h6>
+            </Card.Header>
+            <Card.Body>
+                {/* Mostrar ubicación actual */}
+                {detalle?.ubicacionNombre && (
+                    <div className="mb-3 p-3 bg-light rounded">
+                        <h6 className="mb-1 text-muted">Ubicación Actual:</h6>
+                        <p className="mb-0 fw-semibold text-primary">{detalle.ubicacionNombre}</p>
+                    </div>
+                )}
+
+                <Form>
+                    <Row className="g-3">
+                        <Col md={8}>
+                            <Form.Group>
+                                <Form.Label className="small fw-semibold">Seleccionar Ubicación</Form.Label>
+                                <Form.Select
+                                    value={selectedUbicacion}
+                                    onChange={(e) => setSelectedUbicacion(e.target.value)}
+                                    size="sm"
+                                >
+                                    <option value="">(sin ubicación)</option>
+                                    {ubicaciones.map(u => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.nombre}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <div className="d-grid" style={{ paddingTop: '1.7rem' }}>
+                                <Button
+                                    onClick={save}
+                                    size="sm"
+                                    disabled={loading}
+                                    variant="primary"
+                                >
+                                    {loading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2" />
+                                            Guardando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="fas fa-save me-2"></i>
+                                            Guardar
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card.Body>
+        </Card>
+    );
 }

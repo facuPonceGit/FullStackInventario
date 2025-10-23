@@ -1,4 +1,4 @@
-// frontend/src/components/Asignacion.js - VERSIÓN CORREGIDA (AGREGAR onSaved)
+// frontend/src/components/Asignacion.js
 import { useEffect, useState } from "react";
 import { listarUsuariosAsignados } from "../api/catalogos";
 import {
@@ -9,7 +9,7 @@ import {
 import { parseFromInputDateTime, toInputDateTime } from "../utils/dt";
 import { fmtDateTime } from "../utils/format";
 
-export default function Asignacion({ equipoId, onSaved }) { // ← AGREGAR onSaved aquí
+export default function Asignacion({ equipoId, onSaved }) { // 
     const [usuarios, setUsuarios] = useState([]);
     const [vigente, setVigente] = useState(null);
     const [hist, setHist] = useState([]);
