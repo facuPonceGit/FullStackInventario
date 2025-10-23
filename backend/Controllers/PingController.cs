@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// backend/Controllers/PingControllers.cs
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace BackendApi.Controllers;
 

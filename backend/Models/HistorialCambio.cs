@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/HistorialCambio.cs
+
+
+namespace BackendApi.Models
 {
     public class HistorialCambio
     {

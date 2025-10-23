@@ -1,4 +1,5 @@
-﻿using BackendApi.Data;
+﻿// backend/Services/EquipoService.cs - VERSIÓN CORREGIDA
+using BackendApi.Data;
 using BackendApi.Dtos;
 using BackendApi.Models;
 
@@ -57,9 +58,10 @@ SELECT LAST_INSERT_ID();";
                   WHERE EquipoId=@EquipoId
                   ORDER BY Fecha DESC",
                 new { EquipoId = equipoId });
+
         public async Task<(bool ok, string? error)> ActualizarCompraYGarantiaAsync(int id, CompraGarantiaDto dto)
         {
-            // 0 ó negativo = “sin proveedor”
+            // 0 ó negativo = "sin proveedor"
             int? prov = (dto.ProveedorId.HasValue && dto.ProveedorId.Value > 0)
                 ? dto.ProveedorId
                 : null;
@@ -110,48 +112,50 @@ SELECT LAST_INSERT_ID();";
                 "SELECT Id FROM usuarios_asignados WHERE Id=@Id LIMIT 1", new { Id = dto.UsuarioId });
             if (usr is null) return (false, "UsuarioId inválido (no existe)");
 
-            // si ya está asignado al mismo usuario, no hacemos nada
-            var actual = await _db.QuerySingleOrDefaultAsync<int?>(
-                @"SELECT UsuarioId FROM asignaciones 
-          WHERE EquipoId=@EquipoId AND FechaHasta IS NULL LIMIT 1",
-                new { EquipoId = equipoId });
-            if (actual.HasValue && actual.Value == dto.UsuarioId) return (true, null);
-
             var fecha = dto.FechaDesde ?? DateTime.UtcNow;
 
             await _db.ExecuteAsync(@"
         UPDATE asignaciones
-           SET FechaHasta = NOW()
+           SET FechaHasta = @Fecha
          WHERE EquipoId=@EquipoId AND FechaHasta IS NULL;
 
         INSERT INTO asignaciones (EquipoId,UsuarioId,FechaDesde,Observacion)
         VALUES (@EquipoId,@UsuarioId,@Fecha,@Obs);
-    ", new { EquipoId = equipoId, UsuarioId = dto.UsuarioId, Fecha = fecha, Obs = dto.Observacion });
+    ", new
+            {
+                EquipoId = equipoId,
+                UsuarioId = dto.UsuarioId,
+                Fecha = fecha,
+                Obs = dto.Observacion
+            });
 
             return (true, null);
         }
 
         // R4 — Ver asignación vigente
-        public Task<IEnumerable<dynamic>> ObtenerAsignacionVigenteAsync(int equipoId) =>
-            _db.QueryAsync<dynamic>(
-                @"SELECT a.Id, a.EquipoId, a.UsuarioId, u.Nombre, u.Email, a.FechaDesde
-            FROM asignaciones a
-            JOIN usuarios_asignados u ON u.Id = a.UsuarioId
-           WHERE a.EquipoId=@EquipoId AND a.FechaHasta IS NULL",
+        public async Task<AsignacionVigenteDto?> ObtenerAsignacionVigenteAsync(int equipoId)
+        {
+            return await _db.QuerySingleOrDefaultAsync<AsignacionVigenteDto>(
+                @"SELECT a.UsuarioId, u.Nombre, u.Email, a.FechaDesde
+          FROM asignaciones a
+          JOIN usuarios_asignados u ON u.Id = a.UsuarioId
+         WHERE a.EquipoId=@EquipoId AND a.FechaHasta IS NULL
+         LIMIT 1",
                 new { EquipoId = equipoId });
+        }
 
         // R4 — Ver historial de asignaciones
-        public Task<IEnumerable<dynamic>> ListarAsignacionesAsync(int equipoId) =>
-            _db.QueryAsync<dynamic>(
-                @"SELECT a.Id, a.EquipoId, a.UsuarioId, u.Nombre, u.Email,
+        public async Task<IEnumerable<AsignacionDto>> ListarAsignacionesAsync(int equipoId)
+        {
+            return await _db.QueryAsync<AsignacionDto>(
+                @"SELECT a.Id, a.EquipoId, a.UsuarioId, u.Nombre as UsuarioNombre, u.Email as UsuarioEmail,
                  a.FechaDesde, a.FechaHasta, a.Observacion
-            FROM asignaciones a
-            JOIN usuarios_asignados u ON u.Id = a.UsuarioId
-           WHERE a.EquipoId=@EquipoId
-           ORDER BY a.FechaDesde DESC",
+          FROM asignaciones a
+          JOIN usuarios_asignados u ON u.Id = a.UsuarioId
+         WHERE a.EquipoId=@EquipoId
+         ORDER BY a.FechaDesde DESC",
                 new { EquipoId = equipoId });
-
-
+        }
 
         public async Task<bool> EquipoExisteAsync(int id)
         {
@@ -160,11 +164,11 @@ SELECT LAST_INSERT_ID();";
             return existe.HasValue;
         }
 
-
         public async Task<EquipoDetalleDto?> ObtenerDetalleAsync(int id)
         {
-            // Cabecera con nombres
-            var cab = await _db.QuerySingleOrDefaultAsync<dynamic>(@"
+            //  PROBLEMA CRÍTICO: El dynamic no está mapeando correctamente
+            // Usemos un tipo específico en lugar de dynamic
+            var cab = await _db.QuerySingleOrDefaultAsync<EquipoCabeceraDto>(@"
         SELECT e.Id, e.CodigoInventario, e.Nombre, e.Marca, e.Modelo, e.Tipo, e.NumeroSerie,
                e.Activo, e.FechaAdquisicion, e.FechaVencGarantia, e.ProveedorId, e.UbicacionId,
                p.Nombre AS ProveedorNombre, u.Nombre AS UbicacionNombre
@@ -173,7 +177,7 @@ SELECT LAST_INSERT_ID();";
           LEFT JOIN ubicaciones u ON u.Id = e.UbicacionId
          WHERE e.Id=@Id", new { Id = id });
 
-            if (cab is null) return null;
+            if (cab == null) return null;
 
             var peris = await _db.QueryAsync<Periferico>(
                 "SELECT * FROM perifericos WHERE EquipoId=@Id ORDER BY Id DESC", new { Id = id });
@@ -212,12 +216,24 @@ SELECT LAST_INSERT_ID();";
                 Historial = hist
             };
         }
-
-
-
-
     }
 
-
-
+    //  AGREGAR ESTA CLASE para reemplazar el dynamic
+    public class EquipoCabeceraDto
+    {
+        public int Id { get; set; }
+        public string CodigoInventario { get; set; } = "";
+        public string Nombre { get; set; } = "";
+        public string? Marca { get; set; }
+        public string? Modelo { get; set; }
+        public string? Tipo { get; set; }
+        public string? NumeroSerie { get; set; }
+        public bool Activo { get; set; }
+        public DateTime? FechaAdquisicion { get; set; }  // ← Nullable
+        public DateTime? FechaVencGarantia { get; set; } // ← Nullable
+        public int? ProveedorId { get; set; }
+        public string? ProveedorNombre { get; set; }
+        public int? UbicacionId { get; set; }
+        public string? UbicacionNombre { get; set; }
+    }
 }

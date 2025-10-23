@@ -1,5 +1,7 @@
-﻿using Dapper;
-using MySql.Data.MySqlClient;
+﻿// backend/Data/MySqlProviders.cs
+
+using Dapper;
+using MySqlConnector; // Cambiar este using
 
 namespace BackendApi.Data
 {
@@ -14,19 +16,19 @@ namespace BackendApi.Data
 
         public async Task<IEnumerable<T>> QueryAsync<T>(string sql, object? param = null)
         {
-            using var conn = new MySqlConnection(_cs);
+            using var conn = new MySqlConnection(_cs); // MySqlConnector
             return await conn.QueryAsync<T>(sql, param);
         }
 
         public async Task<T?> QuerySingleOrDefaultAsync<T>(string sql, object? param = null)
         {
-            using var conn = new MySqlConnection(_cs);
+            using var conn = new MySqlConnection(_cs); // MySqlConnector
             return await conn.QuerySingleOrDefaultAsync<T>(sql, param);
         }
 
         public async Task<int> ExecuteAsync(string sql, object? param = null)
         {
-            using var conn = new MySqlConnection(_cs);
+            using var conn = new MySqlConnection(_cs); // MySqlConnector
             return await conn.ExecuteAsync(sql, param);
         }
     }

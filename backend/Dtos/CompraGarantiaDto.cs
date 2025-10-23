@@ -1,4 +1,6 @@
-﻿namespace BackendApi.Dtos
+﻿//backend/Dtos/ComprarGarantia.cs
+
+namespace BackendApi.Dtos
 {
     public class CompraGarantiaDto
     {

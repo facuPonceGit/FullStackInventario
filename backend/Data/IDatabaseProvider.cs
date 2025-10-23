@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Data
+﻿// backend/Data/IDataProviders.cs
+
+
+namespace BackendApi.Data
 {
     public interface IDatabaseProvider
     {

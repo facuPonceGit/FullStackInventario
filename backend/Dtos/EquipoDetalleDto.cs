@@ -1,4 +1,7 @@
-﻿using BackendApi.Models;
+﻿//backend/Dtos/EquipoDetalleDto.cs
+
+
+using BackendApi.Models;
 
 namespace BackendApi.Dtos
 {
@@ -12,8 +15,8 @@ namespace BackendApi.Dtos
         public string? Tipo { get; set; }
         public string? NumeroSerie { get; set; }
         public bool Activo { get; set; }
-        public DateTime? FechaAdquisicion { get; set; }
-        public DateTime? FechaVencGarantia { get; set; }
+        public DateTime? FechaAdquisicion { get; set; }  // ← Nullable
+        public DateTime? FechaVencGarantia { get; set; } // ← Nullable
         public int? ProveedorId { get; set; }
         public string? ProveedorNombre { get; set; }
         public int? UbicacionId { get; set; }

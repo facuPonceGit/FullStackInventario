@@ -1,3 +1,4 @@
+// backend/db/Readme.md
 # Backend Inventario (R1–R4)
 
 API en **ASP.NET Core (.NET 8)** con **Dapper** y **MySQL/MariaDB**.

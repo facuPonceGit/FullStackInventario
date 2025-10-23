@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/Ubicacion.cs
+
+
+namespace BackendApi.Models
 {
     public class Ubicacion
     {

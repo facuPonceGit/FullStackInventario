@@ -1,4 +1,7 @@
-﻿using BackendApi.Data;
+﻿// backend/Controllers/UbicacionesControllers.cs
+
+
+using BackendApi.Data;
 using BackendApi.Models;
 using Microsoft.AspNetCore.Mvc;
 

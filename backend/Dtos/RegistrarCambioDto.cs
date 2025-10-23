@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Dtos
+﻿//backend/Dtos/RegistrarCambioDto.cs
+
+
+namespace BackendApi.Dtos
 {
     public class RegistrarCambioDto
     {

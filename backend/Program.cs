@@ -1,9 +1,21 @@
+//backend/Program.cs
 using BackendApi.Data;
 using BackendApi.Services;
+using System.Text.Json;
+using Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// REGISTRAR TYPE HANDLERS ANTES DE CUALQUIER OTRO SERVICIO
+SqlMapper.AddTypeHandler(new DateTimeHandler());
+SqlMapper.AddTypeHandler(new NullableDateTimeHandler());
+
 builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -17,7 +29,6 @@ builder.Services.AddCors(o => o.AddPolicy("AllowFrontend",
     p => p.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod()));
 
 builder.Services.AddScoped<DbHealthService>();
-
 
 var app = builder.Build();
 

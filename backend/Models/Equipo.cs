@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/Equipo.cs
+
+
+namespace BackendApi.Models
 {
     public class Equipo
     {

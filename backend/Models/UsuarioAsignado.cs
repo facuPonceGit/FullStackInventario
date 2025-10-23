@@ -1,4 +1,7 @@
-﻿namespace BackendApi.Models
+﻿//backend/Models/UsuarioAsignado.cs
+
+
+namespace BackendApi.Models
 {
     public class UsuarioAsignado
     {

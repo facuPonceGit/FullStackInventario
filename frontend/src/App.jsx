@@ -1,3 +1,4 @@
+//frontend/src/jsx
 import { useState } from 'react'
 import EquipoForm from './components/EquipoForm'
 import EquipoList from './components/EquipoList'

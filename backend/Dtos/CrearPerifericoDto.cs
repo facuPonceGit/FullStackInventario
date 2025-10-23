@@ -1,4 +1,6 @@
-﻿namespace BackendApi.Dtos
+﻿//backend/Dtos/CrearPerifericoDto.cs
+
+namespace BackendApi.Dtos
 {
     public class CrearPerifericoDto
     {
