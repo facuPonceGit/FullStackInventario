@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'https://localhost:7144',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'https://localhost:7144', //puerto del backend
   timeout: Number(import.meta.env.VITE_API_TIMEOUT ?? 10000),
   withCredentials: false
 })

@@ -40,3 +40,38 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* frontend/src/App.css (con CSS personalizado) */
+.navbar-brand {
+    transition: all 0.3s ease;
+}
+
+    .navbar-brand:hover {
+        transform: translateY(-1px);
+    }
+
+.nav-link {
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+    .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: bold;
+    }
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+    

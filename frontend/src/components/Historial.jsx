@@ -1,13 +1,14 @@
-// frontend/src/components/Historial.jsx
 import { useEffect, useState } from "react";
 import { Card, ListGroup, Form, Button, Row, Col, Alert, Badge } from "react-bootstrap";
 import { listarHistorial, registrarCambio } from "../api/equipos";
+import { listarUsuariosAsignados } from "../api/catalogos";
 import { parseFromInputDateTime, toInputDateTime } from "../utils/dt";
 import { fmtDateTime } from "../utils/format";
 
 export default function Historial({ equipoId, onSaved }) {
     const [items, setItems] = useState([]);
-    const [form, setForm] = useState({ descripcion: "", usuario: "", fecha: "" });
+    const [usuarios, setUsuarios] = useState([]);
+    const [form, setForm] = useState({ descripcion: "", usuarioId: "", fecha: "" });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
@@ -24,6 +25,11 @@ export default function Historial({ equipoId, onSaved }) {
         }
     }
 
+    // Cargar lista de usuarios al montar el componente
+    useEffect(() => {
+        listarUsuariosAsignados().then(setUsuarios);
+    }, []);
+
     useEffect(() => {
         load();
     }, [equipoId]);
@@ -36,13 +42,18 @@ export default function Historial({ equipoId, onSaved }) {
         setError(null);
         setSuccess(false);
         try {
+            // Obtener el nombre del usuario seleccionado
+            const usuarioSeleccionado = usuarios.find(u => u.id.toString() === form.usuarioId);
+            const usuarioNombre = usuarioSeleccionado ? usuarioSeleccionado.nombre : null;
+
             const payload = {
                 descripcion: form.descripcion?.trim() || null,
-                usuario: form.usuario?.trim() || null,
+                usuario: usuarioNombre,
                 fecha: form.fecha ? parseFromInputDateTime(form.fecha) : null,
             };
+
             await registrarCambio(equipoId, payload);
-            setForm({ descripcion: "", usuario: "", fecha: "" });
+            setForm({ descripcion: "", usuarioId: "", fecha: "" });
             setSuccess(true);
             load();
             onSaved?.();
@@ -148,13 +159,21 @@ export default function Historial({ equipoId, onSaved }) {
                             <Col md={3}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Usuario</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="usuario"
-                                        placeholder="Quién realizó el cambio"
-                                        value={form.usuario}
+                                    <Form.Select
+                                        name="usuarioId"
+                                        value={form.usuarioId}
                                         onChange={onChange}
-                                    />
+                                    >
+                                        <option value="">Seleccionar usuario...</option>
+                                        {usuarios.map((u) => (
+                                            <option key={u.id} value={u.id}>
+                                                {u.nombre} {u.area ? `(${u.area})` : ''}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                    <Form.Text className="text-muted">
+                                        Seleccione el usuario que realizó el cambio
+                                    </Form.Text>
                                 </Form.Group>
                             </Col>
                             <Col md={3}>

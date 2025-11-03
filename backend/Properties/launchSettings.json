@@ -1,5 +1,4 @@
-﻿//backend/Properties/launchsettings.json
-
+﻿//backend/Properties/launchsettings.json - en perfil http->puerto 5129 - en perfil https->7144 (el que usamos) --aqui configuramos los puertos por los que escuchara el backend (atravez del cual el frontend se conecta al back)
 
 {
   "$schema": "http://json.schemastore.org/launchsettings.json",

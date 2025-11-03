@@ -1,7 +1,7 @@
 using Dapper;
 using MySqlConnector;
 using System.Data;
-//Este conector se implemento por error en facha traida de db y mostrada en back (solucionado)
+//Este conector se implemento por error en fecha traida de db y mostrada en back (solucionado)
 namespace BackendApi.Data
 {
     public class DateTimeHandler : SqlMapper.TypeHandler<DateTime>
