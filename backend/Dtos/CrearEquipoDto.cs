@@ -1,4 +1,4 @@
-﻿//backend/Dtos/ComprarEquipoDto.cs
+﻿//backend/Dtos/CrearEquipoDto.cs
 
 
 namespace BackendApi.Dtos

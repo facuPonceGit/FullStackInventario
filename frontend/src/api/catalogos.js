@@ -1,4 +1,4 @@
-// frontend/src/api/catalogo.js
+// frontend/src/api/catalogos.js
 import api from './client'
 
 export async function listarProveedores() {

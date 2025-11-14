@@ -1,206 +1,210 @@
-﻿# FullStackInventario (Monorepo)
+﻿Sistema de Gestión de Inventario Informático
+Sistema completo de gestión de inventario desarrollado como Trabajo Final Integrador para la materia Administración de Recursos de la UTN FRT. Incluye backend en .NET 8, frontend en React y base de datos MySQL.
 
-Backend (.NET)
-Puerto: 7144 (HTTPS) / 5129 (HTTP)
+ Características
+Funcionalidades Principales
+Gestión completa de equipos informáticos (alta, modificación, consulta)
 
-Base de datos: MySQL con Dapper
+Control de periféricos y componentes asociados a cada equipo
 
-Documentación: Swagger automática
+Seguimiento de asignaciones a usuarios con historial completo
 
-Frontend (React)
-Puerto: 5173
+Gestión de garantías y proveedores
 
-Variables de entorno: Crear .env.local si es necesario
+Registro de cambios con historial detallado
 
-API Base URL: http://localhost:7144
+Sistema de ubicaciones para organización física
+
+Reportes ejecutivos con gráficos y exportación a PDF/Excel
+
+Tecnologías Utilizadas
+Backend
+.NET 8 con ASP.NET Core
+
+Dapper para acceso a datos
+
+MySQL/MariaDB como base de datos
+
+Swagger para documentación de API
+
+QuestPDF y ClosedXML para generación de reportes
+
+Frontend
+React 19 con Vite
+
+Bootstrap 5 + React Bootstrap
+
+Chart.js para gráficos interactivos
+
+Axios para consumo de APIs
+
+Font Awesome para iconografía
 
 Base de Datos
+MySQL 8.0+ / MariaDB 10.4+
 
+Esquema normalizado con relaciones y constraints
 
+Índices optimizados para consultas frecuentes
 
+📋 Requisitos del Sistema
+Prerrequisitos
+.NET 8 SDK
 
-# Inventario FullStack (React + .NET 8 + MySQL)
+Node.js 18+
 
-Monorepo del ejemplo de **Inventario** con backend en **ASP.NET Core 8**, acceso a datos con **Dapper** + **MySqlConnector**, frontend en **React 19** con **Vite** y estilos con **Bootstrap**.  
-Incluye scripts SQL para crear y poblar la base, y una guía de ejecución local.
+MySQL 8.0+ o MariaDB 10.4+
 
----
+Git
 
-## 📦 Estructura
+Puertos Utilizados
+Backend: 7144 (HTTPS) / 5129 (HTTP)
 
-FullStackInventario/
-├── backend/ # API .NET Core
-│ ├── Controllers/ # Endpoints
-│ ├── Services/ # Reglas de negocio
-│ ├── Data/ # Dapper + MySqlConnector + TypeHandlers DateTime
-│ ├── Dtos/ # Data Transfer Objects
-│ ├── Models/ # POCOs
-│ └── db/
-│ ├── 01_schema.sql # crea BD + tablas + índices
-│ └── 02_seed_minimo.sql
-├── frontend/ # React + Vite
-│ ├── src/
-│ │ ├── api/ # clientes axios
-│ │ ├── components/ # UI (Bootstrap)
-│ │ └── utils/ # helpers fechas/formato
-│ ├── index.html
-│ └── package.json
-└── README.md
+Frontend: 5173
 
+Base de datos: 3306 (por defecto)
 
----
-
-## ✅ Funcionalidad Implementada (R1–R4 + extras)
-
-- **R1**: Alta de equipos y periféricos; listado de periféricos por equipo.
-- **R2**: Registro y consulta de **historial de cambios** (fecha, usuario, descripción).
-- **R3**: Gestión de **compra / garantía / proveedor** del equipo.
-- **R4**: **Ubicación** del equipo (FK a catálogo) y **asignaciones** (vigente + historial).
-- **Extras incluidos en el Front**, requisitos faltantes a confirmar:
-  - Normalización y formateo robusto de fechas (inputs `date/datetime-local`).
-  - Refresco manual de ficha (“↻ Actualizar Vista”) y refrescos automáticos post-alta.
-  - Estilos con **Bootstrap**.
-  - Logs de requests/responses (axios interceptors) para depuración.
-
----
-
-## 🔧 Requisitos
-
-- **.NET 8 SDK**
-- **Node.js 18+** (o 20+) y **npm**
-- **MySQL 8** o **MariaDB 10.4+**
-- (Windows) Certificados dev para HTTPS:
-  ```bash
-  dotnet dev-certs https --trust
-
-🗄️ Base de datos
-
-En backend/db/ encontrarás:
-
-    01_schema.sql → crea BD, tablas, constraints e índices (incluye defaults correctos en fechas).
-
-    02_seed_minimo.sql → datos iniciales (catálogos + 1 equipo de ejemplo).
-
-Aplicación de scripts (como root/administrador):
-
-# Crear estructura
+🛠️ Instalación y Configuración
+1. Clonar el Repositorio
+bash
+git clone <url-del-repositorio>
+cd FullStackInventario
+2. Configuración de la Base de Datos
+Crear la base de datos:
+bash
 mysql -u root -p < backend/db/01_schema.sql
-
-# Poblar datos
-mysql -u root -p inventario < backend/db/02_seed_minimo.sql --Recomendado crear db y poblar manualmente, con los datos en backend/01_schema.sql y 02_seed_minimos.sql_
-
-    El script 01_schema.sql también crea (opcional) el usuario de app:
-    inventario_app@localhost con permisos sobre la BD inventario.
-
-🔐 Configuración de conexión (sin secretos en Git)
-
-En backend/appsettings.json se deja un placeholder NO funcional:
-
-{
-  "AllowedHosts": "*",
-  "Database": { "Provider": "MySql" },
-  "ConnectionStrings": {
-    "MySqlConnection": "Server=127.0.0.1;Port=3306;Database=inventario;User Id=inventario_app;Password=__SECRET__;CharSet=utf8mb4;SslMode=None;"
-  }
-}
-
-Guarda tu cadena real con User Secrets (local-only):
-
+Poblar con datos iniciales:
+bash
+mysql -u root -p inventario < backend/db/02_seed_minimo.sql
+Configurar conexión (User Secrets):
+bash
 cd backend
 dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:MySqlConnection" "Server=127.0.0.1;Port=3306;Database=inventario;User Id=inventario_app;Password=TU_PASS!;CharSet=utf8mb4;SslMode=None;"
-
-    Cambiá IP/puerto/usuario/clave según tu entorno.
-    El proyecto usa Dapper + MySqlConnector y registra TypeHandlers para DateTime/DateTime?.
-
-▶️ Cómo ejecutar - Se deben abrir 2 consolas, una para ejecutar el back y otra para ejecutar el front, ambas en cada carpeta (back y front)
-1) Backend (.NET)
-
+dotnet user-secrets set "ConnectionStrings:MySqlConnection" "Server=127.0.0.1;Port=3306;Database=inventario;User Id=inventario_app;Password=TU_PASSWORD;CharSet=utf8mb4;SslMode=None;"
+3. Ejecutar el Backend
+bash
 cd backend
 dotnet build
-dotnet run --launch-profile https   # Swagger en https://localhost:7144/swagger
+dotnet run --launch-profile https
+La API estará disponible en: https://localhost:7144/swagger
 
-    CORS permite http://localhost:5173 (frontend).
-
-    Perfiles: http (5129) y https (7144).
-
-2) Frontend (React + Vite)
-
+4. Ejecutar el Frontend
+bash
 cd frontend
-npm i
-# (opcional) crear archivo .env.development si querés customizar:
-# VITE_API_BASE_URL=https://localhost:7144
-# VITE_API_TIMEOUT=10000
-npm run dev   # http://localhost:5173
+npm install
+npm run dev
+La aplicación estará disponible en: http://localhost:5173
 
-🔗 Endpoints principales (Swagger)
+🎯 Funcionalidades Implementadas
+Gestión de Equipos
+Creación y listado de equipos informáticos
 
-    Salud: GET /ping, GET /db/ping
+Códigos de inventario únicos
 
-    Equipos:
+Campos para marca, modelo, tipo y número de serie
 
-        GET /api/Equipos
+Estados activo/inactivo
 
-        POST /api/Equipos
+Periféricos y Componentes
+Asociación de periféricos a equipos
 
-        GET /api/Equipos/{id}/detalle
+Tipos, marcas, modelos y números de serie
 
-    Periféricos:
+Gestión completa de componentes
 
-        POST /api/Equipos/{id}/perifericos
+Historial de Cambios
+Registro detallado de modificaciones
 
-        GET /api/Equipos/{id}/perifericos
+Fechas y usuarios responsables
 
-    Historial:
+Descripciones completas de cambios
 
-        POST /api/Equipos/{id}/historial
+Gestión de Garantías y Proveedores
+Fechas de adquisición y vencimiento de garantía
 
-        GET /api/Equipos/{id}/historial
+Asociación con proveedores
 
-    Compra/Garantía/Proveedor:
-    PUT /api/Equipos/{id}/compra-garantia
+Alertas de garantías próximas a vencer
 
-    Ubicación (0 o ausencia = limpiar):
-    PUT /api/Equipos/{id}/ubicacion/{ubicacionId?}
+Sistema de Asignaciones
+Asignación de equipos a usuarios
 
-    Asignaciones:
+Historial completo de asignaciones
 
-        POST /api/Equipos/{id}/asignar
+Fechas de inicio y fin
 
-        GET /api/Equipos/{id}/asignacion (vigente o null)
+Observaciones y seguimiento
 
-        GET /api/Equipos/{id}/asignaciones (historial)
+Sistema de Ubicaciones
+Gestión de ubicaciones físicas
 
-    Catálogos:
-    GET /api/Proveedores, GET /api/Ubicaciones, GET /api/UsuariosAsignados
+Asignación y cambio de ubicaciones
 
-🧰 Problemas comunes (Windows)
+Organización por áreas
 
-    Unlink de esbuild.exe al cambiar de rama: cerrá npm run dev, y si persiste:
+Reportes y Análisis
+Dashboard con métricas principales
 
-    taskkill /IM node.exe /F
-    taskkill /IM esbuild.exe /F
+Gráficos de distribución por tipo y área
 
-    Luego npm ci en frontend/ si borraste binarios.
+Estado de garantías
 
-    Certificados HTTPS: dotnet dev-certs https --trust.
+Exportación a PDF y Excel
 
-    CORS: el backend ya habilita http://localhost:5173.
+🔌 Endpoints Principales de la API
+Equipos
+GET /api/Equipos - Listar todos los equipos
 
-🧪 Datos de prueba
+POST /api/Equipos - Crear nuevo equipo
 
-Tras ejecutar 02_seed_minimo.sql tendrás:
+GET /api/Equipos/{id}/detalle - Detalle completo del equipo
 
-    Proveedores, ubicaciones y usuarios precargados.
+Periféricos
+POST /api/Equipos/{id}/perifericos - Agregar periférico
 
-    Un equipo ejemplo con 1 periférico, 1 cambio y 1 asignación vigente.
+GET /api/Equipos/{id}/perifericos - Listar periféricos
 
-🧭 Flujo Git recomendado
+Historial
+POST /api/Equipos/{id}/historial - Registrar cambio
 
-    Rama de trabajo: dev
+GET /api/Equipos/{id}/historial - Consultar historial
 
-    Rama estable/productiva: main (protegida)
+Asignaciones
+POST /api/Equipos/{id}/asignar - Asignar usuario
 
-    Publicación estable: merge dev → main con --no-ff
+GET /api/Equipos/{id}/asignacion - Asignación vigente
 
-    Crear tag en hitos: git tag -a v0.X.Y -m "..." && git push origin v0.X.Y
+GET /api/Equipos/{id}/asignaciones - Historial de asignaciones
+
+Reportes
+GET /api/Reportes/resumen - Resumen ejecutivo
+
+GET /api/Reportes/garantias - Estado de garantías
+
+GET /api/Reportes/excel - Descargar Excel
+
+GET /api/Reportes/pdf - Descargar PDF
+
+Catálogos
+GET /api/Proveedores - Listar proveedores
+
+GET /api/Ubicaciones - Listar ubicaciones
+
+GET /api/UsuariosAsignados - Listar usuarios
+
+🏫 Universidad
+Universidad Tecnológica Nacional - Facultad Regional Tucumán
+Materia: Administración de Recursos - 2025
+Docentes:
+
+Cordero, Lucas Elio
+
+Ugarte, Fernando Gabriel
+
+Quiroga Hamoud, Maria Celeste
+
+📄 Licencia
+Este proyecto fue desarrollado con fines educativos para la Universidad Tecnológica Nacional - Facultad Regional Tucumán.
+
+🆘 Soporte y Contacto
+Para consultas técnicas o problemas de implementación, contactar a los desarrolladores del proyecto.

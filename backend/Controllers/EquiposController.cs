@@ -1,6 +1,5 @@
 ﻿// backend/Controllers/EquipoControllers.cs
 
-
 using BackendApi.Dtos;
 using BackendApi.Services;
 using Microsoft.AspNetCore.Mvc;
